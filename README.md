@@ -21,3 +21,4 @@ Unfortunately insurance is not available in this game so you won’t be able to 
 
 WHY DO I NEED TO REACH THE WATER?
 WHY ARE YOU TRYING TO RUIN THE GAME WITH YOUR QUESTIONS! SHUT UP AND GIVE ME YOUR MONEY, SORRY! SHUT UP AND PLAY!
+# Portofolio
