@@ -1,0 +1,124 @@
+/* Smartphones (portrait and landscape) ----------- */
+@media only screen and (min-width: 320px) and (max-width: 480px) {
+/* Styles */
+
+/*HEADER CLASSES*/
+
+  .logo-image {
+    padding-bottom: 10px;
+  }
+
+  .main-title {
+    float: right;
+    font-size: 20px;
+  }
+
+  .main-subtitle {
+    float: right;
+    font-size: 15px;
+  }
+
+  .nav-bar {
+    padding: 5px 10px;
+    font-size: 12.5px;
+    display: inline;
+  }
+
+
+
+/*SECTION*/
+
+  .main-image {
+    height: auto;
+    width: auto;
+  }
+
+  .main-content {
+    font-size: 17.5px;
+  }
+
+
+
+/*ARTICLE*/
+
+  .featured-images {
+    width: auto;
+    height: auto;
+    max-width: 85%;
+    margin: auto;
+  }
+
+  .caption {
+    font-size: 15px;
+  }
+
+
+
+  /*FOOTER*/
+
+  .main-footer {
+    font-size: 12.5px;
+  }
+}
+
+
+
+/* iPads (portrait and landscape) ----------- */
+@media only screen and (min-width: 480px) and (max-width: 991px) {
+/* Styles */
+
+/*HEADER CLASSES*/
+
+  .logo-image {
+    padding-bottom: 10px;
+  }
+
+  .main-title {
+    float: right;
+    font-size: 35px;
+    clear: both;
+  }
+
+  .main-subtitle {
+    float: right;
+    font-size: 25px;
+    clear: both;
+  }
+
+  .nav-bar {
+    padding: 5px 15px;
+    font-size: 21.5px;
+  }
+
+
+
+/*SECTION*/
+
+  .main-image {
+    height: auto;
+    width: auto;
+  }
+
+  .main-content {
+    font-size: 22.5px;
+  }
+
+
+
+/*ARTICLE*/
+
+  .featured-images {
+    width: auto;
+    height: auto;
+    max-width: 85%;
+    margin: auto;
+  }
+
+
+
+/*FOOTER*/
+
+  .main-footer {
+    font-size: 15px;
+  }
+}

@@ -1,0 +1,61 @@
+
+/*HEADER CLASSES*/
+
+.logo-image {
+  width: 125px;
+  float: left;
+}
+
+.main-title {
+  float: right;
+  clear: both;
+}
+
+.main-subtitle {
+  float: right;
+  clear: both;
+}
+
+.nav-bar {
+  font-size: 30px;
+  padding: 10px 55px;
+  border: 25px;
+}
+
+
+
+/*SECTION*/
+
+.main-image {
+  width: auto;
+  height: auto;
+  max-width: 75%;
+}
+
+.main-content {
+  padding: 5px;
+  font-size: 20px;
+}
+
+
+
+/*ARTICLE*/
+
+.featured-images {
+  width: auto;
+  height: 250px;
+}
+
+.caption {
+  font-size: 25px;
+  text-align: center;
+}
+
+
+
+/*FOOTER*/
+
+.main-footer {
+  padding: 15px;
+  font-size: 20px;
+}
