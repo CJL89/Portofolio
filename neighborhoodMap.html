@@ -8,8 +8,19 @@
     </head>
     <body>
 
-        <!-- Creation of map div -->
-        <div id="map"></div>
+        <div class="container">
+            <div class="options-box">
+                <h1>Neighborhood Map</h1>
+                <div>
+                    <!-- Creation of buttons that show/hide all the neighborhoods. -->
+                    <input id="show-listings" type="button" value="Show Neighborhoods">
+                    <input id="hide-listings" type="button" value="Hide Neighborhoods">
+                </div>
+            </div>
+
+            <!-- Creation of map div -->
+            <div id="map"></div>
+        </div>
 
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC08YNs5B16Dzh0E4fyDW9oGlIsaINZUQE&callback=initMap"
         async defer>

@@ -19,23 +19,73 @@ function initMap() {
         // Disabled the feature of changing between earth and other types.
         mapTypeControl: false
     });
-}
 
-// Creation of location variables and hardcoded different neighborhoods.
-var locations = [
-    {title: "Central Park", location: {lat: 40.7829, lng: -73.9654}},
-    {title: "East Village", location: {lat: 40.7265, lng: -73.9815}},
-    {title: "Financial District", location: {lat: 40.7075, lng: -74.0113}},
-    {title: "Greenwich Village", location: {lat: 40.7336, lng: -74.0027}},
-    {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
-    {title: "Hell's Kitchen", location: {lat: 40.7638, lng: -73.9918}},
-    {title: "Lenox Hill", location: {lat: 40.7662, lng: -73.9602}},
-    {title: "Midtown", location: {lat: 40.7549, lng: -73.9840}},
-    {title: "Nolita", location: {lat: 40.7229, lng: -73.9955}},
-    {title: "SoHo", location: {lat: 40.7233, lng: -74.0030}},
-    {title: "Tribeca", location: {lat: 40.7163, lng: -74.0086}},
-    {title: "Upper East Side", location: {lat: 40.7736, lng: -73.9566}},
-    {title: "Upper West Side", location: {lat: 40.7870, lng: -73.9754}},
-    {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}},
-    {title: "Yorkville", location: {lat: 40.7762, lng: -73.9492}}
-]
+    // Creation of location variables and hardcoded different neighborhoods.
+    var locations = [
+        {title: "Battery Park City", location: {lat: 40.7033, lng: -74.0170}},
+        {title: "Carnegie Hill", location: {lat: 40.7845, lng: -73.9551}},
+        {title: "Central Park", location: {lat: 40.7829, lng: -73.9654}},
+        {title: "East Village", location: {lat: 40.7265, lng: -73.9815}},
+        {title: "Financial District", location: {lat: 40.7075, lng: -74.0113}},
+        {title: "Garment District", location: {lat: 40.7547, lng: -73.9916}},
+        {title: "Gramercy Park", location: {lat: 40.7368, lng: -73.9845}},
+        {title: "Greenwich Village", location: {lat: 40.7336, lng: -74.0027}},
+        {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
+        {title: "Hell's Kitchen", location: {lat: 40.7638, lng: -73.9918}},
+        {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
+        {title: "Kips Bay", location: {lat: 40.7423, lng: -73.9801}},
+        {title: "Lenox Hill", location: {lat: 40.7662, lng: -73.9602}},
+        {title: "Midtown", location: {lat: 40.7549, lng: -73.9840}},
+        {title: "Morning Heights", location: {lat: 40.8090, lng: -73.9624}},
+        {title: "Nolita", location: {lat: 40.7229, lng: -73.9955}},
+        {title: "SoHo", location: {lat: 40.7233, lng: -74.0030}},
+        {title: "Tribeca", location: {lat: 40.7163, lng: -74.0086}},
+        {title: "Tudor City", location: {lat: 40.7488, lng: -73.9716}},
+        {title: "Upper East Side", location: {lat: 40.7736, lng: -73.9566}},
+        {title: "Upper West Side", location: {lat: 40.7870, lng: -73.9754}},
+        {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}},
+        {title: "Yorkville", location: {lat: 40.7762, lng: -73.9492}}
+    ];
+
+    // Creation of variable "infowindow" so we can dislay the names of the neighborhoods.
+    var infowindow = new google.maps.InfoWindow();
+
+    // For loop that iterates through the different locations.
+    for (var i = 0; i < locations.length; i++) {
+
+        // Create variable "position" within the scope of the for loop to get the lat & lng.
+        var position = locations[i].location;
+
+        // Create the variable "titles" within the scope of the for loop to get the name of the neighborhood.
+        var titles = locations[i].title;
+
+        // Create the variable "marker" within the scope of the for loop.
+        var marker = new google.maps.Marker({
+            position: position,
+            title: titles,
+            animation: google.maps.Animation.DROP,
+            map: map
+        });
+
+        marker.addListener('click', function() {
+            infowindowDescription(this, infowindow);
+        });
+    };
+
+    // Function that populates the infowindow with the appropiate text.
+    function infowindowDescription(marker, infowindow) {
+        // Checking if infowindow is open.
+        if (infowindow != marker) {
+            // Setting infowindow to equate to marker.
+            infowindow.marker = marker;
+            // Setting the location of where the infowindow will open.
+            infowindow.open(map, marker);
+            // Setting the text content that appears within the infowindo.
+            infowindow.setContent(marker.title);
+            // Setting the event listener to clear when the infowindow is closed.
+            infowindow.addListener("closeclick", function(){
+                infowindow.marker = null;
+            });
+        }
+    }
+}
