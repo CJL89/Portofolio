@@ -1,6 +1,9 @@
 
 // Creating variable map to save it in it.
 var map;
+var marker;
+var allMyMarkers = [];
+var infowindow;
 
 // Function to load the Google Maps API.
 function initMap() {
@@ -48,7 +51,13 @@ function initMap() {
     ];
 
     // Creation of variable "infowindow" so we can dislay the names of the neighborhoods.
-    var infowindow = new google.maps.InfoWindow();
+    infowindow = new google.maps.InfoWindow();
+
+    // Creation of variable that sets the default marker to it original form.
+    var defaultIcon = changingMarker("FE7569");
+
+    // Creation of variable that sets the default marker to a different form when clicked.
+    var clickedIcon = changingMarker("2f6d33");
 
     // For loop that iterates through the different locations.
     for (var i = 0; i < locations.length; i++) {
@@ -60,32 +69,77 @@ function initMap() {
         var titles = locations[i].title;
 
         // Create the variable "marker" within the scope of the for loop.
-        var marker = new google.maps.Marker({
+        marker = new google.maps.Marker({
             position: position,
             title: titles,
             animation: google.maps.Animation.DROP,
-            map: map
+            map: map,
+            icon: defaultIcon,
+            id: i
         });
 
+        // Saving the value of the marker in an array.
+        allMyMarkers.push(marker);
+
+        // Event listener that displays the infowindow when a certain marker is clicked on.
         marker.addListener('click', function() {
             infowindowDescription(this, infowindow);
         });
+
+        // Event listener that changes the marker's color when it is clicked.
+        marker.addListener('click', function() {
+          this.setIcon(clickedIcon);
+        });
     };
 
-    // Function that populates the infowindow with the appropiate text.
-    function infowindowDescription(marker, infowindow) {
-        // Checking if infowindow is open.
-        if (infowindow != marker) {
-            // Setting infowindow to equate to marker.
-            infowindow.marker = marker;
-            // Setting the location of where the infowindow will open.
-            infowindow.open(map, marker);
-            // Setting the text content that appears within the infowindo.
-            infowindow.setContent(marker.title);
-            // Setting the event listener to clear when the infowindow is closed.
-            infowindow.addListener("closeclick", function(){
-                infowindow.marker = null;
-            });
+    // Expands the map so it is easier to see all markers on the map.
+    document.getElementById("show-listings").addEventListener("click", function(){
+        var bounds = new google.maps.LatLngBounds();
+        // Extend the boundaries of the map for each marker and display the marker
+        for (var i = 0; i < allMyMarkers.length; i++) {
+            allMyMarkers[i].setMap(map);
+            bounds.extend(allMyMarkers[i].position);
         }
-    }
+        map.fitBounds(bounds);
+    });
+
+    // Hides all the markers on the map.
+    document.getElementById("hide-listings").addEventListener("click", function(){
+        for (var i = 0; i < allMyMarkers.length; i++) {
+            allMyMarkers[i].setMap(null);
+        }
+    });
+}
+
+// Function that populates the infowindow with the appropiate text.
+function infowindowDescription(marker, infowindow) {
+    // Checking if infowindow is open.
+    if (infowindow != marker) {
+        // Setting infowindow to equate to marker.
+        infowindow.marker = marker;
+
+        // Setting the location of where the infowindow will open.
+        infowindow.open(map, marker);
+
+        // Setting the text content that appears within the infowindo.
+        infowindow.setContent(marker.title);
+
+        // Setting the event listener to clear when the infowindow is closed.
+        infowindow.addListener("closeclick", function(){
+            infowindow.marker = null;
+            // Changes the marker color back to its default color.
+            marker.setIcon(initMap.defaultIcon);
+        });
+    };
+}
+
+// Function that retrieves a specific skin for the pin and changes the size, points, and color.
+function changingMarker(color) {
+    var newMarker = new google.maps.MarkerImage(
+        "http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|" + color + '|40|_|%E2%80%A2',
+        new google.maps.Size(21, 34),
+        new google.maps.Point(0, 0),
+        new google.maps.Point(10, 34),
+        new google.maps.Size(21,34));
+    return newMarker;
 }
