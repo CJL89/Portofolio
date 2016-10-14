@@ -5,6 +5,13 @@
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
         <meta charset="utf-8">
         <link href="css/mapsCss.css" rel="stylesheet">
+
+        <!-- Installation of knockout.js -->
+        <script type='text/javascript' src='js/library/knockout.js'></script>
+
+        <!-- File with all the edits of Google Maps API -->
+        <script async defer src="js/maps.js"></script>
+
     </head>
     <body>
 
@@ -16,20 +23,19 @@
                     <input id="show-listings" type="button" value="Show Neighborhoods">
                     <input id="hide-listings" type="button" value="Hide Neighborhoods">
                 </div>
-                <div>
+                <!-- <div>
                     <form action="">
                         <input type="checkbox" name="title" value="initMap.locations"><br>
                         <input type="checkbox" name="title" value="Car">I have a car
                     </form>
-                </div>
+                </div> -->
             </div>
 
             <!-- Creation of map div in the HMTL page-->
             <div id="map"></div>
         </div>
 
-        <!-- Installation of knockout.js -->
-        <script type='text/javascript' src='js/library/knockout-3.4.0.js'></script>
+
 
         <!-- Installation of Google Maps API -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC08YNs5B16Dzh0E4fyDW9oGlIsaINZUQE&callback=initMap"
@@ -37,7 +43,4 @@
         </script>
 
     </body>
-
-    <!-- File with all the edits of Google Maps API -->
-    <script src="js/maps.js"></script>
 </html>
