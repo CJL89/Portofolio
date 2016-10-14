@@ -7,14 +7,14 @@ var infowindow;
 
 // Application’s stored data. This data represents objects and operations in your business domain (e.g., bank accounts that can perform money transfers) and is independent of any UI. When using KO, you will usually make Ajax calls to some server-side code to read and write this stored model data.
 // Definition taken for KO website to easily remember the seperation of the models.
-var Model = function() {
+var Model = {
 
     // Styling the maps so the neighborhoods get highlighted.
     // Styles takes from: "https://snazzymaps.com/style/2709/local-neighborhoods"
-    styles =
+    styles:
         [
         {"featureType":"administrative","elementType":"labels.text.fill","stylers":[{"color":"#444444"},{"visibility":"on"}]},{"featureType":"administrative.neighborhood","elementType":"geometry.fill","stylers":[{"visibility":"on"}]},{"featureType":"landscape","elementType":"all","stylers":[{"color":"#f1f0f0"}]},{"featureType":"landscape.man_made","elementType":"geometry.fill","stylers":[{"visibility":"on"}]},{"featureType":"landscape.natural.landcover","elementType":"geometry.fill","stylers":[{"visibility":"on"},{"color":"#03b7b0"}]},{"featureType":"poi","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"poi.school","elementType":"geometry","stylers":[{"visibility":"on"},{"color":"#cccccc"},{"lightness":"0"}]},{"featureType":"poi.school","elementType":"geometry.fill","stylers":[{"color":"#fcce61"}]},{"featureType":"poi.school","elementType":"labels.icon","stylers":[{"visibility":"on"}]},{"featureType":"road","elementType":"all","stylers":[{"saturation":-100},{"lightness":45}]},{"featureType":"road.highway","elementType":"all","stylers":[{"visibility":"simplified"}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#f1f0f0"}]},{"featureType":"road.arterial","elementType":"geometry.fill","stylers":[{"color":"#cccccc"},{"visibility":"off"}]},{"featureType":"road.arterial","elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"all","stylers":[{"visibility":"off"}]},{"featureType":"transit.line","elementType":"geometry.fill","stylers":[{"color":"#fcce61"}]},{"featureType":"transit.line","elementType":"labels","stylers":[{"visibility":"on"}]},{"featureType":"transit.station.bus","elementType":"geometry.fill","stylers":[{"hue":"#ffb300"}]},{"featureType":"water","elementType":"all","stylers":[{"color":"#46bcec"},{"visibility":"on"}]},{"featureType":"water","elementType":"geometry.fill","stylers":[{"color":"#2ab6de"},{"lightness":"0"},{"gamma":"1.00"}]},{"featureType":"water","elementType":"labels.text","stylers":[{"visibility":"simplified"},{"color":"#ffffff"}]}
-        ];
+        ],
 
     // Creation of location variables and hardcoded different neighborhoods.
     locations:
@@ -42,30 +42,13 @@ var Model = function() {
         {title: "Upper West Side", location: {lat: 40.7870, lng: -73.9754}},
         {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}},
         {title: "Yorkville", location: {lat: 40.7762, lng: -73.9492}}
-        ];
+        ]
 };
 
 
 // A pure-code representation of the data and operations on a UI. For example, if you’re implementing a list editor, your view model would be an object holding a list of items, and exposing methods to add and remove items.
 // Definition taken for KO website to easily remember the seperation of the models.
 var ViewModel = function() {
-
-    // Function to load the Google Maps API.
-    initMap = function() {
-
-        // Initializing map and saving in variable and inputing in the "maps" ID.
-        map = new google.maps.Map(document.getElementById('map'), {
-
-            //Central Park is the center of the map.
-            center: {lat: 40.7728, lng: -73.9759},
-            zoom: 13,
-
-            // Initializing the style that saved in the variable "styles".
-            styles: ko.observable(Model.styles),
-
-            // Disabled the feature of changing between earth and other types.
-            mapTypeControl: false
-        });
 
     };
 
@@ -132,8 +115,6 @@ var ViewModel = function() {
     //     });
     // }
 
-};
-
 
 // A visible, interactive UI representing the state of the view model. It displays information from the view model, sends commands to the view model (e.g., when the user clicks buttons), and updates whenever the state of the view model changes.
 // Definition taken for KO website to easily remember the seperation of the models.
@@ -173,6 +154,24 @@ var ViewModel = function() {
 //     }
 //
 // };
+
+// Function to load the Google Maps API.
+function initMap() {
+
+    // Initializing map and saving in variable and inputing in the "maps" ID.
+    map = new google.maps.Map(document.getElementById('map'), {
+
+        //Central Park is the center of the map.
+        center: {lat: 40.7728, lng: -73.9759},
+        zoom: 13,
+
+        // Initializing the style that saved in the variable "styles".
+        styles: Model.styles,
+
+        // Disabled the feature of changing between earth and other types.
+        mapTypeControl: false
+    });
+};
 
 
 // Initialize KO by selecting the ViewModel.
