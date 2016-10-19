@@ -1,10 +1,15 @@
-// Creating variable map to save it in it.
-var map;
-var marker;
-var allMyMarkers = [];
-var infowindow;
 
+
+
+
+// Your application’s stored data. This data represents objects and operations in your business domain (e.g., bank accounts that can perform money transfers) and is independent of any UI. When using KO, you will usually make Ajax calls to some server-side code to read and write this stored model data.
 var Model = {
+
+    // Creating variables to later save in them.
+    map,
+    marker,
+    allMyMarkers: [],
+    infowindow,
 
     // Styling the maps so the neighborhoods get highlighted.
     // Styles takes from: "https://snazzymaps.com/style/2709/local-neighborhoods"
@@ -38,7 +43,7 @@ var Model = {
     ],
 };
 
-
+// A pure-code representation of the data and operations on a UI. For example, if you’re implementing a list editor, your view model would be an object holding a list of items, and exposing methods to add and remove items.
 var ViewModel = {
 
     // Function that populates the infowindow with the appropiate text.
