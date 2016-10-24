@@ -13,25 +13,33 @@
                 <h1>Neighborhood Map</h1>
                 <div>
                     <!-- Creation of buttons that show/hide all the neighborhoods. -->
-                    <input id="show-listings" type="button" value="Show Neighborhoods">
-                    <input id="hide-listings" type="button" value="Hide Neighborhoods">
+                    <input data-bind="click: showListings" id="show-listings" type="button" value="Show Neighborhoods">
+                    <input data-bind="click: hideListings" id="hide-listings" type="button" value="Hide Neighborhoods">
                 </div>
-                <div>
-                    <form action="">
-                        <input type="checkbox" name="title" value="initMap.locations"><br>
-                        <input type="checkbox" name="title" value="Car">I have a car
-                    </form>
-                </div>
+                <!-- Creation of checklist seperating Manhattan in 4 sections. -->
+                <!-- <div data-bind="visible: showListings">
+                    List of neighborhoods:
+                    <div><input type="checkbox" value="north" data-bind="checked: neighborhoods" /> North Neighborhoods</div>
+                    <div><input type="checkbox" value="east" data-bind="checked: neighborhoods" /> East Neighborhoods</div>
+                    <div><input type="checkbox" value="south" data-bind="checked: neighborhoods" /> South Neighborhoods</div>
+                    <div><input type="checkbox" value="west" data-bind="checked: neighborhoods" /> West Neighborhoods</div>
+                </div> -->
             </div>
 
-            <!-- Creation of map div -->
+            <!-- Creation of map div in the HMTL page-->
             <div id="map"></div>
         </div>
 
+        <!-- Installation of knockout.js -->
+        <script type='text/javascript' src='js/library/knockout.js'></script>
+
+        <!-- File with all the edits of Google Maps API -->
+        <script async defer src="js/maps.js"></script>
+
+        <!-- Installation of Google Maps API -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC08YNs5B16Dzh0E4fyDW9oGlIsaINZUQE&callback=initMap"
         async defer>
         </script>
 
     </body>
-    <script src="js/maps.js"></script>
 </html>
