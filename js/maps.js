@@ -1,4 +1,11 @@
 
+
+// Creation of main variables
+var map,
+    marker,
+    infoWindow,
+    allMyMarkers = [];
+
 // Function to load the Google Maps API.
 var initMap = function() {
 
@@ -23,43 +30,85 @@ var initMap = function() {
     map = new google.maps.Map(document.getElementById('map'), options);
 
     // Creation of variable "infowindow" so we can dislay the names of the neighborhoods.
-    infowindow = new google.maps.InfoWindow();
+    infoWindow = new google.maps.InfoWindow();
 
-    // Create the variable "marker" within the scope of the for loop.
-    var marker = new google.maps.Marker({
-        position: null,
-        animation: google.maps.Animation.DROP,
-        map: map
-    });
+    // For loop that iterates through the different locations.
+    for (var i = 0; i < Model.locations.length; i++) {
+
+        // Create variable "position" within the scope of the for loop to get the lat & lng.
+        var positions = Model.locations[i].location;
+
+        // Create the variable "titles" within the scope of the for loop to get the name of the neighborhood.
+        var titles = Model.locations[i].title;
+
+
+        // Create the variable "marker" within the scope of the for loop.
+        marker = new google.maps.Marker({
+            position: positions,
+            title: titles,
+            animation: google.maps.Animation.DROP,
+            map: map,
+            id: i
+        });
+
+        // Saving the value of the marker in an array.
+        allMyMarkers.push(marker);
+
+        // Event listener that displays the infowindow when a certain marker is clicked on.
+        marker.addListener('click', function() {
+
+            // Makes the marker bounce when it is clicked on.
+            toggleBounce(this);
+
+            // Calls for the function that populates the markers.
+            infowindowDescription(this, infoWindow);
+        });
+    };
 };
 
 
+// Function that populates the infowindow with the appropiate text.
+function infowindowDescription(marker, infoWindow) {
 
-    //
-    // // For loop that iterates through the different locations.
-    // for (var i = 0; i < Model.locations.length; i++) {
-    //
-    //     // Create variable "position" within the scope of the for loop to get the lat & lng.
-    //     var position = Model.locations[i].location;
-    //
-    //     // Create the variable "titles" within the scope of the for loop to get the name of the neighborhood.
-    //     var titles = Model.locations[i].title;
-    //
+    // Checking if infowindow is open.
+    if (infoWindow.marker != marker) {
+
+        // Setting infowindow to equate to marker.
+        infoWindow.marker = marker;
+
+        // Setting the location of where the infowindow will open.
+        infoWindow.open(map, marker);
+
+        // Setting the text content that appears within the infowindo.
+        infoWindow.setContent(marker.title);
+
+        // Setting the event listener to clear when the infowindow is closed.
+        infoWindow.addListener("closeclick", function(){
+            infoWindow.marker = null;
+            // Changes the marker color back to its default color.
+            // marker.setIcon(initMap.defaultIcon);
+        });
+    };
+};
+
+
+// Function that makes the markers bounce when they are selected.
+function toggleBounce() {
+    if (marker.getAnimation() !== null) {
+        marker.setAnimation(null);
+    } else {
+        marker.setAnimation(google.maps.Animation.BOUNCE);
+    }
+};
+
+
     //     // Creation of variable that sets the default marker to it original form.
     //     var defaultIcon = ViewModel.changingMarker("FE7569");
     //
     //     // Creation of variable that sets the default marker to a different form when clicked.
     //     var clickedIcon = ViewModel.changingMarker("2f6d33");
     //
-    //
-    //
-    //     // Saving the value of the marker in an array.
-    //     Model.allMyMarkers.push(marker);
-    //
-    //     // Event listener that displays the infowindow when a certain marker is clicked on.
-    //     marker.addListener('click', function() {
-    //         ViewModel.infowindowDescription(this, infowindow);
-    //     });
+
     //
     //     // Event listener that changes the marker's color when it is clicked.
     //     marker.addListener('click', function() {
@@ -67,7 +116,16 @@ var initMap = function() {
     //     });
     // };
 
-
+    // // Function that retrieves a specific skin for the pin and changes the size, points, and color.
+    // self.changingMarker = function(color) {
+    //     var newMarker = new google.maps.MarkerImage(
+    //         "http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|" + color + '|40|_|%E2%80%A2',
+    //         new google.maps.Size(21, 34),
+    //         new google.maps.Point(0, 0),
+    //         new google.maps.Point(10, 34),
+    //         new google.maps.Size(21,34));
+    //     return newMarker;
+    // },
 
 // Your application’s stored data. This data represents objects and operations in your business domain (e.g., bank accounts that can perform money transfers) and is independent of any UI. When using KO, you will usually make Ajax calls to some server-side code to read and write this stored model data.
 var Model = {
@@ -105,63 +163,48 @@ var Model = {
     ],
 };
 
-
-
+// Creation of variables for KO.
+var KOVariable = function(data) {
+    self.koTitles = ko.observable(Model.locations.title);
+    self.koLocation = ko.observable(Model.locations.location);
+};
 
 // A pure-code representation of the data and operations on a UI. For example, if you’re implementing a list editor, your view model would be an object holding a list of items, and exposing methods to add and remove items.
 var ViewModel = function() {
 
+    // Setting this to self to differentiate easier.
     var self = this;
 
-    // Function that populates the infowindow with the appropiate text.
-    self.infowindowDescription = function(marker, infowindow) {
-        // Checking if infowindow is open.
-        if (infowindow != marker) {
-            // Setting infowindow to equate to marker.
-            infowindow.marker = marker;
+    var locationsArray = ko.utils.arrayMap(locations, function(location) {
+        return new KOVariable(location);
+    });
 
-            // Setting the location of where the infowindow will open.
-            infowindow.open(map, marker);
+    self.locationsList = ko.observableArray(locationsArray);
 
-            // Setting the text content that appears within the infowindo.
-            infowindow.setContent(marker.title);
+    // var showListings = ko.obsevable("");
 
-            // Setting the event listener to clear when the infowindow is closed.
-            infowindow.addListener("closeclick", function(){
-                infowindow.marker = null;
-                // Changes the marker color back to its default color.
-                marker.setIcon(initMap.defaultIcon);
-            });
-        };
-    },
+    // // Expands the map so it is easier to see all markers on the map.
+    // self.showListings = ko.computed (function() {
+    //     var bounds = new google.maps.LatLngBounds();
+    //
+    //     // Extend the boundaries of the map for each marker and display the marker
+    //     for (var i = 0; i < Model.allMyMarkers.length; i++) {
+    //         Model.allMyMarkers[i].setMap(map);
+    //         bounds.extend(Model.allMyMarkers[i].position);
+    //     }
+    //     map.fitBounds(bounds);
+    // }),
 
-    // Function that retrieves a specific skin for the pin and changes the size, points, and color.
-    self.changingMarker = function(color) {
-        var newMarker = new google.maps.MarkerImage(
-            "http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|" + color + '|40|_|%E2%80%A2',
-            new google.maps.Size(21, 34),
-            new google.maps.Point(0, 0),
-            new google.maps.Point(10, 34),
-            new google.maps.Size(21,34));
-        return newMarker;
-    },
+    // // Hides all the markers on the map.
+    // self.hideListings = function() {
+    //     this.setMapOnAll(null);
+    // }
+};
 
-    // Expands the map so it is easier to see all markers on the map.
-    self.showListings = function() {
-        var bounds = new google.maps.LatLngBounds();
-        // Extend the boundaries of the map for each marker and display the marker
-        for (var i = 0; i < Model.allMyMarkers.length; i++) {
-            Model.allMyMarkers[i].setMap(map);
-            bounds.extend(Model.allMyMarkers[i].position);
-        }
-        map.fitBounds(bounds);
-    },
-
-    // Hides all the markers on the map.
-    self.hideListings = function() {
-      this.setMapOnAll(null);
-    }
+// Error alert if Google Maps API is not available.
+var googleFail = function() {
+    alert("Could not load Google Map. Try again later");
 };
 
 // Activates KO
-ko.applyBindings(ViewModel);
+// ko.applyBindings(ViewModel);
