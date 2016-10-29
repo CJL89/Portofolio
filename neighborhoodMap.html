@@ -11,19 +11,44 @@
         <div class="container">
             <div class="options-box">
                 <h1>Neighborhood Map</h1>
-                <div>
+                <!-- <div> -->
                     <!-- Creation of buttons that show/hide all the neighborhoods. -->
-                    <input data-bind="click: showListings" id="show-listings" type="button" value="Show Neighborhoods">
-                    <input data-bind="click: hideListings" id="hide-listings" type="button" value="Hide Neighborhoods">
-                </div>
+                    <!-- <input data-bind="click: showListings" id="show-listings" type="button" value="Show Neighborhoods">
+                    <input data-bind="click: hideListings" id="hide-listings" type="button" value="Hide Neighborhoods"> -->
+                <!-- </div> -->
                 <!-- Creation of checklist seperating Manhattan in 4 sections. -->
-                <!-- <div data-bind="visible: showListings">
-                    List of neighborhoods:
-                    <div><input type="checkbox" value="north" data-bind="checked: neighborhoods" /> North Neighborhoods</div>
-                    <div><input type="checkbox" value="east" data-bind="checked: neighborhoods" /> East Neighborhoods</div>
-                    <div><input type="checkbox" value="south" data-bind="checked: neighborhoods" /> South Neighborhoods</div>
-                    <div><input type="checkbox" value="west" data-bind="checked: neighborhoods" /> West Neighborhoods</div>
-                </div> -->
+                <!-- <div data-bind="visible: locationsList"> -->
+                List of neighborhoods:
+                <div>
+                    <input type="checkbox" value="north" data-bind="checked: neighborhoods"> North Neighborhoods </input>
+                    <div data-bind="visible: northArray">
+                        <ul data-bind="foreach: northArray">
+                            <li data-bind="text: title">
+                        </ul>
+                    </div>
+                </div>
+                <div>
+                    <input type="checkbox" value="east" data-bind="checked: neighborhoods"> East Neighborhoods </input>
+                    <ul data-bind="visible: eastArray">
+                        <li data-bind="text: title">
+                    </ul>
+                </div>
+                <div>
+                    <input type="checkbox" value="south" data-bind="checked: neighborhoods"/> South Neighborhoods </input>
+                    <ul data-bind="visible: southArray">
+                        <li data-bind="text: title">
+                    </ul>
+                </div>
+                <div>
+                    <input type="checkbox" value="west" data-bind="checked: neighborhoods"/> West Neighborhoods </input>
+                    <ul data-bind="visible: westArray">
+                        <li data-bind="text: title">
+                    </ul>
+                </div>
+                <!-- </div> -->
+                <!-- <ul data-bind="foreach: locationsList">
+                    <li data-bind="text: title"></li>
+                </ul> -->
             </div>
 
             <!-- Creation of map div in the HMTL page-->

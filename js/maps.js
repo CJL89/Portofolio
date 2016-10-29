@@ -6,6 +6,7 @@ var map,
     infoWindow,
     allMyMarkers = [];
 
+
 // Function to load the Google Maps API.
 var initMap = function() {
 
@@ -33,13 +34,13 @@ var initMap = function() {
     infoWindow = new google.maps.InfoWindow();
 
     // For loop that iterates through the different locations.
-    for (var i = 0; i < Model.locations.length; i++) {
+    Model.locations.forEach(function(loc) {
 
         // Create variable "position" within the scope of the for loop to get the lat & lng.
-        var positions = Model.locations[i].location;
+        var positions = loc.location;
 
         // Create the variable "titles" within the scope of the for loop to get the name of the neighborhood.
-        var titles = Model.locations[i].title;
+        var titles = loc.title;
 
 
         // Create the variable "marker" within the scope of the for loop.
@@ -47,12 +48,8 @@ var initMap = function() {
             position: positions,
             title: titles,
             animation: google.maps.Animation.DROP,
-            map: map,
-            id: i
+            map: map
         });
-
-        // Saving the value of the marker in an array.
-        allMyMarkers.push(marker);
 
         // Event listener that displays the infowindow when a certain marker is clicked on.
         marker.addListener('click', function() {
@@ -63,7 +60,13 @@ var initMap = function() {
             // Calls for the function that populates the markers.
             infowindowDescription(this, infoWindow);
         });
-    };
+
+        // Saving the results of the loop in the variable marker.
+        loc.marker = marker;
+    });
+
+    // Activates KO
+    ko.applyBindings(ViewModel);
 };
 
 
@@ -93,7 +96,7 @@ function infowindowDescription(marker, infoWindow) {
 
 
 // Function that makes the markers bounce when they are selected.
-function toggleBounce() {
+function toggleBounce(marker) {
     if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
     } else {
@@ -101,31 +104,6 @@ function toggleBounce() {
     }
 };
 
-
-    //     // Creation of variable that sets the default marker to it original form.
-    //     var defaultIcon = ViewModel.changingMarker("FE7569");
-    //
-    //     // Creation of variable that sets the default marker to a different form when clicked.
-    //     var clickedIcon = ViewModel.changingMarker("2f6d33");
-    //
-
-    //
-    //     // Event listener that changes the marker's color when it is clicked.
-    //     marker.addListener('click', function() {
-    //       this.setIcon(clickedIcon);
-    //     });
-    // };
-
-    // // Function that retrieves a specific skin for the pin and changes the size, points, and color.
-    // self.changingMarker = function(color) {
-    //     var newMarker = new google.maps.MarkerImage(
-    //         "http://chart.googleapis.com/chart?chst=d_map_spin&chld=1.15|0|" + color + '|40|_|%E2%80%A2',
-    //         new google.maps.Size(21, 34),
-    //         new google.maps.Point(0, 0),
-    //         new google.maps.Point(10, 34),
-    //         new google.maps.Size(21,34));
-    //     return newMarker;
-    // },
 
 // Your application’s stored data. This data represents objects and operations in your business domain (e.g., bank accounts that can perform money transfers) and is independent of any UI. When using KO, you will usually make Ajax calls to some server-side code to read and write this stored model data.
 var Model = {
@@ -163,11 +141,6 @@ var Model = {
     ],
 };
 
-// Creation of variables for KO.
-var KOVariable = function(data) {
-    self.koTitles = ko.observable(Model.locations.title);
-    self.koLocation = ko.observable(Model.locations.location);
-};
 
 // A pure-code representation of the data and operations on a UI. For example, if you’re implementing a list editor, your view model would be an object holding a list of items, and exposing methods to add and remove items.
 var ViewModel = function() {
@@ -175,36 +148,71 @@ var ViewModel = function() {
     // Setting this to self to differentiate easier.
     var self = this;
 
-    var locationsArray = ko.utils.arrayMap(locations, function(location) {
-        return new KOVariable(location);
+    // Creation of observable array and binding it to Model.locations.
+    self.locationsList = ko.observableArray(Model.locations);
+
+    // Creation of observable array that bind to the different checkboxes.
+    self.neighborhoods = ko.observableArray(["north", "east", "south", "west"]);
+
+    self.showNeighborhoods = ko.computed(function() {
+        self.showNeighborhoods = ko.observable(false);
     });
 
-    self.locationsList = ko.observableArray(locationsArray);
+    // Computed funtion that filters only the north neighborhoods.
+    self.northArray = ko.computed(function() {
+        // Filter results that show the results of north neighborhoods.
+        var northFilter = [
+            {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
+            {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
+            {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}}
+            ];
+        return northFilter;
+    });
 
-    // var showListings = ko.obsevable("");
+    // Computed funtion that filters only the east neighborhoods.
+    self.eastArray = ko.computed(function() {
+        // Filter results that show the results of east neighborhoods.
+        var eastFilter = [
+            {title: "Carnegie Hill", location: {lat: 40.7845, lng: -73.9551}},
+            {title: "Lenox Hill", location: {lat: 40.7662, lng: -73.9602}},
+            {title: "Upper East Side", location: {lat: 40.7736, lng: -73.9566}},
+            {title: "Yorkville", location: {lat: 40.7762, lng: -73.9492}}
+            ];
+        return eastFilter;
+    });
 
-    // // Expands the map so it is easier to see all markers on the map.
-    // self.showListings = ko.computed (function() {
-    //     var bounds = new google.maps.LatLngBounds();
-    //
-    //     // Extend the boundaries of the map for each marker and display the marker
-    //     for (var i = 0; i < Model.allMyMarkers.length; i++) {
-    //         Model.allMyMarkers[i].setMap(map);
-    //         bounds.extend(Model.allMyMarkers[i].position);
-    //     }
-    //     map.fitBounds(bounds);
-    // }),
+    // Computed funtion that filters only the south neighborhoods.
+    self.southArray = ko.computed(function() {
+        // Filter results that show the results of south neighborhoods.
+        var southFilter = [
+            {title: "Battery Park City", location: {lat: 40.7033, lng: -74.0170}},
+            {title: "East Village", location: {lat: 40.7265, lng: -73.9815}},
+            {title: "Financial District", location: {lat: 40.7075, lng: -74.0113}},
+            {title: "Garment District", location: {lat: 40.7547, lng: -73.9916}},
+            {title: "Gramercy Park", location: {lat: 40.7368, lng: -73.9845}},
+            {title: "Greenwich Village", location: {lat: 40.7336, lng: -74.0027}},
+            {title: "Kips Bay", location: {lat: 40.7423, lng: -73.9801}},
+            {title: "Midtown", location: {lat: 40.7549, lng: -73.9840}},
+            {title: "Nolita", location: {lat: 40.7229, lng: -73.9955}},
+            {title: "SoHo", location: {lat: 40.7233, lng: -74.0030}},
+            {title: "Tribeca", location: {lat: 40.7163, lng: -74.0086}},
+            {title: "Tudor City", location: {lat: 40.7488, lng: -73.9716}}
+            ];
+        return southFilter;
+    });
 
-    // // Hides all the markers on the map.
-    // self.hideListings = function() {
-    //     this.setMapOnAll(null);
-    // }
+    // Computed funtion that filters only the west neighborhoods.
+    self.westArray = ko.computed(function() {
+        // Filter results that show the results of west neighborhoods.
+        var westFilter = [
+            {title: "Hell's Kitchen", location: {lat: 40.7638, lng: -73.9918}},
+            {title: "Upper West Side", location: {lat: 40.7870, lng: -73.9754}}
+            ];
+        return westFilter;
+    });
 };
 
 // Error alert if Google Maps API is not available.
 var googleFail = function() {
     alert("Could not load Google Map. Try again later");
 };
-
-// Activates KO
-// ko.applyBindings(ViewModel);
