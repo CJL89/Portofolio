@@ -4,7 +4,6 @@
 var map,
     marker,
     infoWindow,
-    allMyMarkers = [];
 
 
 // Function to load the Google Maps API.
@@ -67,7 +66,7 @@ var initMap = function() {
 
     // Activates KO
     ko.applyBindings(ViewModel);
-};
+}; // End of initMap -----------------------------------------------------------
 
 
 // Function that populates the infowindow with the appropiate text.
@@ -139,7 +138,7 @@ var Model = {
         {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}},
         {title: "Yorkville", location: {lat: 40.7762, lng: -73.9492}}
     ],
-};
+}; // End of Model ------------------------------------------------------------
 
 
 // A pure-code representation of the data and operations on a UI. For example, if you’re implementing a list editor, your view model would be an object holding a list of items, and exposing methods to add and remove items.
@@ -154,20 +153,21 @@ var ViewModel = function() {
     // Creation of observable array that bind to the different checkboxes.
     self.neighborhoods = ko.observableArray(["north", "east", "south", "west"]);
 
-    // self.showNeighborhoods = ko.computed(function() {
-    //     self.showNeighborhoods = ko.observable(false);
-    // });
-
     // Computed funtion that filters only the north neighborhoods.
     self.northArray = ko.computed(function() {
-        this.showNorth = ko.observable(false);
-        // Filter results that show the results of north neighborhoods.
-        var northFilter = [
-            {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
-            {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
-            {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}}
-            ];
-        return northFilter;
+        self.neighborhoods = ko.observableArray([0], false);
+
+        self.test = ko.computed(function() {
+            // Filter results that show the results of north neighborhoods.
+            var northFilter = [
+                {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
+                {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
+                {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}}
+              ];
+          self.neighborhoods.push(northFilter, [0], true);
+        })
+
+
     });
 
     // Computed funtion that filters only the east neighborhoods.
@@ -211,7 +211,7 @@ var ViewModel = function() {
             ];
         return westFilter;
     });
-};
+}; // End of ViewModel ---------------------------------------------------------
 
 // Error alert if Google Maps API is not available.
 var googleFail = function() {

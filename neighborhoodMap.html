@@ -22,28 +22,34 @@
                 <div>
                     <input type="checkbox" value="north" data-bind="checked: neighborhoods"> North Neighborhoods </input>
                     <div data-bind="visible: northArray">
-                        <ul>
+                        <ul data-bind="foreach: northArray, click: test">
                             <li data-bind="text: title">
                         </ul>
                     </div>
                 </div>
                 <div>
                     <input type="checkbox" value="east" data-bind="checked: neighborhoods"> East Neighborhoods </input>
-                    <ul data-bind="visible: eastArray">
-                        <li data-bind="text: title">
-                    </ul>
+                    <div data-bind="visible: southArray">
+                        <ul data-bind="foreach: southArray">
+                            <li data-bind="text: title">
+                        </ul>
+                    </div>
                 </div>
                 <div>
                     <input type="checkbox" value="south" data-bind="checked: neighborhoods"/> South Neighborhoods </input>
-                    <ul data-bind="visible: southArray">
-                        <li data-bind="text: title">
-                    </ul>
+                    <div data-bind="visible: southArray">
+                        <ul data-bind="foreach: southArray">
+                            <li data-bind="text: title">
+                        </ul>
+                    </div>
                 </div>
                 <div>
                     <input type="checkbox" value="west" data-bind="checked: neighborhoods"/> West Neighborhoods </input>
-                    <ul data-bind="visible: westArray">
-                        <li data-bind="text: title">
-                    </ul>
+                    <div data-bind="visible: westArray">
+                        <ul data-bind="foreach: westArray">
+                            <li data-bind="text: title">
+                        </ul>
+                    </div>
                 </div>
                 <!-- </div> -->
                 <!-- <ul data-bind="foreach: locationsList">
