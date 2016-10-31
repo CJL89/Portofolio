@@ -154,12 +154,13 @@ var ViewModel = function() {
     // Creation of observable array that bind to the different checkboxes.
     self.neighborhoods = ko.observableArray(["north", "east", "south", "west"]);
 
-    self.showNeighborhoods = ko.computed(function() {
-        self.showNeighborhoods = ko.observable(false);
-    });
+    // self.showNeighborhoods = ko.computed(function() {
+    //     self.showNeighborhoods = ko.observable(false);
+    // });
 
     // Computed funtion that filters only the north neighborhoods.
     self.northArray = ko.computed(function() {
+        this.showNorth = ko.observable(false);
         // Filter results that show the results of north neighborhoods.
         var northFilter = [
             {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
