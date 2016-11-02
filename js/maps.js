@@ -7,7 +7,7 @@ var map,
 
 
 // Function to load the Google Maps API.
-var initMap = function() {
+function initMap() {
 
     // Initial coordinates when the map is first loaded
     initialCoordinates = Model.locations[2].location;
