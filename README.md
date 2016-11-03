@@ -5,8 +5,6 @@ frontend-nanodegree-arcade-game
 
 This project is an online portfolio developed during the Front-End Nanodegree.
 
-
-
 ARCADE GAME
 
 HOW DO I START THE GAME?
@@ -30,3 +28,11 @@ frontend-nanodegree-neighborhood-map
 ====================================
 
 Neighborhood Map
+
+This is a little neighborhood map that splits New York city into different sections between north, east, south, and west.
+
+HOW DO I START THE MAP?
+From the main page, just click the Neighborhood Map link and it will automatically direct you to the actual page.
+
+WHAT’S THE OBJECTIVE OF THE MAP?
+The map shows and divides the different sections of NY. As of now, locations are hard coded into the page, making it more time consuming to add more. However, the overall code could be transformed to get a set of locations from a different library as long as the ViewModel is directed to the new library.
