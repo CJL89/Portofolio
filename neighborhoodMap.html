@@ -22,15 +22,15 @@
                 <div>
                     <input type="checkbox" value="north" data-bind="checked: neighborhoods"> North Neighborhoods </input>
                     <div data-bind="visible: northArray">
-                        <ul data-bind="foreach: northArray, click: test">
+                        <ul data-bind="foreach: northArray">
                             <li data-bind="text: title">
                         </ul>
                     </div>
                 </div>
                 <div>
                     <input type="checkbox" value="east" data-bind="checked: neighborhoods"> East Neighborhoods </input>
-                    <div data-bind="visible: southArray">
-                        <ul data-bind="foreach: southArray">
+                    <div data-bind="visible: eastArray">
+                        <ul data-bind="foreach: eastArray">
                             <li data-bind="text: title">
                         </ul>
                     </div>

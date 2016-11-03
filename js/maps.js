@@ -3,7 +3,7 @@
 // Creation of main variables
 var map,
     marker,
-    infoWindow,
+    infoWindow;
 
 
 // Function to load the Google Maps API.
@@ -65,7 +65,7 @@ function initMap() {
     });
 
     // Activates KO
-    ko.applyBindings(ViewModel);
+    ko.applyBindings(new VM());
 }; // End of initMap -----------------------------------------------------------
 
 
@@ -153,25 +153,29 @@ var ViewModel = function() {
     // Creation of observable array that bind to the different checkboxes.
     self.neighborhoods = ko.observableArray(["north", "east", "south", "west"]);
 
+    // Click function.
+    function test() {
+        self.neighborhoods(true);
+        return self.neighborhoods;
+    };
+
     // Computed funtion that filters only the north neighborhoods.
     self.northArray = ko.computed(function() {
-        self.neighborhoods = ko.observableArray([0], false);
+        self.neighborhoods = ko.observableArray(0, false);
 
-        self.test = ko.computed(function() {
-            // Filter results that show the results of north neighborhoods.
-            var northFilter = [
-                {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
-                {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
-                {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}}
-              ];
-          self.neighborhoods.push(northFilter, [0], true);
-        })
-
-
+        // Filter results that show the results of north neighborhoods.
+        var northFilter = [
+            {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
+            {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
+            {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}}
+        ];
+        return northFilter;
     });
 
     // Computed funtion that filters only the east neighborhoods.
     self.eastArray = ko.computed(function() {
+        self.neighborhoods = ko.observableArray(0, false);
+
         // Filter results that show the results of east neighborhoods.
         var eastFilter = [
             {title: "Carnegie Hill", location: {lat: 40.7845, lng: -73.9551}},
@@ -217,3 +221,5 @@ var ViewModel = function() {
 var googleFail = function() {
     alert("Could not load Google Map. Try again later");
 };
+
+var VM = ViewModel;
