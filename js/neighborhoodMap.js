@@ -9,13 +9,10 @@ var map,
 // Function to load the Google Maps API.
 function initMap() {
 
-    // Initial coordinates when the map is first loaded
-    initialCoordinates = Model.locations[2].location;
-
     // Different options that manipulate the map API
     var options = {
         //Central Park is the center of the map.
-        center: initialCoordinates,
+        center: Model.locations[2].location,
         // Initial camera span when map is loaded.
         zoom: 12,
         // Initializing the style that saved in the variable "styles".
@@ -41,14 +38,22 @@ function initMap() {
         // Create the variable "titles" within the scope of the for loop to get the name of the neighborhood.
         var titles = loc.title;
 
+        // Create of variable bounds of the map so it shows all the markers.
+        var bounds = new google.maps.LatLngBounds();
 
         // Create the variable "marker" within the scope of the for loop.
         marker = new google.maps.Marker({
             position: positions,
             title: titles,
             animation: google.maps.Animation.DROP,
-            map: map
+            map: map,
         });
+
+        // bounds.extend(locations);
+        // map.fitBounds(bounds);
+
+        // Call for the function wikipediaAPI.
+        wikipediaAPI(marker);
 
         // Event listener that displays the infowindow when a certain marker is clicked on.
         marker.addListener('click', function() {
@@ -66,7 +71,7 @@ function initMap() {
 
     // Activates KO
     ko.applyBindings(new VM());
-}; // End of initMap -----------------------------------------------------------
+} // End of initMap -----------------------------------------------------------
 
 
 // Function that populates the infowindow with the appropiate text.
@@ -81,17 +86,15 @@ function infowindowDescription(marker, infoWindow) {
         // Setting the location of where the infowindow will open.
         infoWindow.open(map, marker);
 
-        // Setting the text content that appears within the infowindo.
-        infoWindow.setContent(marker.title);
+        // Setting the text content that appears within the infowindow.
+        infoWindow.setContent("<h4>" + marker.title + "</h4><p>" + marker.description + "</p>");
 
         // Setting the event listener to clear when the infowindow is closed.
         infoWindow.addListener("closeclick", function(){
             infoWindow.marker = null;
-            // Changes the marker color back to its default color.
-            // marker.setIcon(initMap.defaultIcon);
         });
-    };
-};
+    }
+}
 
 
 // Function that makes the markers bounce when they are selected.
@@ -99,9 +102,54 @@ function toggleBounce(marker) {
     if (marker.getAnimation() !== null) {
         marker.setAnimation(null);
     } else {
+
+        // Gets the animation from google to make the markers bounce.
         marker.setAnimation(google.maps.Animation.BOUNCE);
+
+        // Set the times the marker will bounce after it gets clicked.
+        setTimeout(function() {
+            marker.setAnimation(null);
+        }, 2100);
     }
-};
+}
+
+
+// Function that gathers the information from WikiPedia.
+function wikipediaAPI(marker) {
+
+    // Creation of variable that holds the address of the API + the title of the location.
+    var wikiURL = "https://en.wikipedia.org/w/api.php?action=opensearch&search=" + marker.title + "&format=json&callback=wikiCallback";
+
+    // AJAX request that makes sure whether or not is successful.
+    $.ajax({
+
+        // URL of the AJAX request.
+        url: wikiURL,
+
+        // Type of request.
+        type: "get",
+
+        // Type of file.
+        dataType: "jsonp",
+
+
+
+    // Function that handles the sucessful retrieval of information from Wikipedia.
+    }).done(function(response) {
+
+        // Creation of the variable of the description of the maker clicked.
+        var description = response[2][0] || "Could not load information.";
+
+        // Save of the variables to the different markers.
+        marker.description = description;
+        
+    // Function that handles the failed retrieval of informaton from Wikipedia.
+    }).fail(function() {
+
+        // Message that is displayed after failed attempt of retrieval of information in infowindow.
+        marker.description = ("Could not connect to Wikipedia");
+    });
+}
 
 
 // Your application’s stored data. This data represents objects and operations in your business domain (e.g., bank accounts that can perform money transfers) and is independent of any UI. When using KO, you will usually make Ajax calls to some server-side code to read and write this stored model data.
@@ -114,6 +162,8 @@ var Model = {
 
     // Creation of location variables and hardcoded different neighborhoods.
     locations: [
+
+        // Filter results that show the results of each neighborhood.
         {title: "Battery Park City", location: {lat: 40.7033, lng: -74.0170}},
         {title: "Carnegie Hill", location: {lat: 40.7845, lng: -73.9551}},
         {title: "Central Park", location: {lat: 40.7829, lng: -73.9654}},
@@ -127,7 +177,7 @@ var Model = {
         {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
         {title: "Kips Bay", location: {lat: 40.7423, lng: -73.9801}},
         {title: "Lenox Hill", location: {lat: 40.7662, lng: -73.9602}},
-        {title: "Midtown", location: {lat: 40.7549, lng: -73.9840}},
+        {title: "Midtown Manhattan", location: {lat: 40.7549, lng: -73.9840}},
         {title: "Morning Heights", location: {lat: 40.8090, lng: -73.9624}},
         {title: "Nolita", location: {lat: 40.7229, lng: -73.9955}},
         {title: "SoHo", location: {lat: 40.7233, lng: -74.0030}},
@@ -137,7 +187,7 @@ var Model = {
         {title: "Upper West Side", location: {lat: 40.7870, lng: -73.9754}},
         {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}},
         {title: "Yorkville", location: {lat: 40.7762, lng: -73.9492}}
-    ],
+        ]
 }; // End of Model ------------------------------------------------------------
 
 
@@ -146,75 +196,26 @@ var ViewModel = function() {
 
     // Setting this to self to differentiate easier.
     var self = this;
+    this.query = ko.observable('');
 
-    // Creation of observable array and binding it to Model.locations.
-    self.locationsList = ko.observableArray(Model.locations);
+    // Searched through the locations and lists the names of the different locations that were found.
+    this.searchBox = ko.computed(function() {
+        return ko.utils.arrayFilter(Model.locations, function(loc) {
+            if (self.query().length === 0 || loc.title.toLowerCase().indexOf(self.query().toLowerCase()) > -1) {
+                loc.marker.setVisible(true);
+                return true;
+            } else {
+                loc.marker.setVisible(false);
+                return false;
+            }
+        });
+    });
 
-    // Creation of observable array that bind to the different checkboxes.
-    self.neighborhoods = ko.observableArray(["north", "east", "south", "west"]);
-
-    // Click function.
-    function test() {
-        self.neighborhoods(true);
-        return self.neighborhoods;
+    // Click function that locates the marker that the user clicked.
+    this.showMarker = function(location) {
+        google.maps.event.trigger(location.marker, "click");
     };
 
-    // Computed funtion that filters only the north neighborhoods.
-    self.northArray = ko.computed(function() {
-        self.neighborhoods = ko.observableArray(0, false);
-
-        // Filter results that show the results of north neighborhoods.
-        var northFilter = [
-            {title: "Harlem", location: {lat: 40.8116, lng: -73.9465}},
-            {title: "Inwood", location: {lat: 40.8677, lng: -73.9212}},
-            {title: "Washington Heights", location: {lat: 40.8417, lng: -73.9394}}
-        ];
-        return northFilter;
-    });
-
-    // Computed funtion that filters only the east neighborhoods.
-    self.eastArray = ko.computed(function() {
-        self.neighborhoods = ko.observableArray(0, false);
-
-        // Filter results that show the results of east neighborhoods.
-        var eastFilter = [
-            {title: "Carnegie Hill", location: {lat: 40.7845, lng: -73.9551}},
-            {title: "Lenox Hill", location: {lat: 40.7662, lng: -73.9602}},
-            {title: "Upper East Side", location: {lat: 40.7736, lng: -73.9566}},
-            {title: "Yorkville", location: {lat: 40.7762, lng: -73.9492}}
-            ];
-        return eastFilter;
-    });
-
-    // Computed funtion that filters only the south neighborhoods.
-    self.southArray = ko.computed(function() {
-        // Filter results that show the results of south neighborhoods.
-        var southFilter = [
-            {title: "Battery Park City", location: {lat: 40.7033, lng: -74.0170}},
-            {title: "East Village", location: {lat: 40.7265, lng: -73.9815}},
-            {title: "Financial District", location: {lat: 40.7075, lng: -74.0113}},
-            {title: "Garment District", location: {lat: 40.7547, lng: -73.9916}},
-            {title: "Gramercy Park", location: {lat: 40.7368, lng: -73.9845}},
-            {title: "Greenwich Village", location: {lat: 40.7336, lng: -74.0027}},
-            {title: "Kips Bay", location: {lat: 40.7423, lng: -73.9801}},
-            {title: "Midtown", location: {lat: 40.7549, lng: -73.9840}},
-            {title: "Nolita", location: {lat: 40.7229, lng: -73.9955}},
-            {title: "SoHo", location: {lat: 40.7233, lng: -74.0030}},
-            {title: "Tribeca", location: {lat: 40.7163, lng: -74.0086}},
-            {title: "Tudor City", location: {lat: 40.7488, lng: -73.9716}}
-            ];
-        return southFilter;
-    });
-
-    // Computed funtion that filters only the west neighborhoods.
-    self.westArray = ko.computed(function() {
-        // Filter results that show the results of west neighborhoods.
-        var westFilter = [
-            {title: "Hell's Kitchen", location: {lat: 40.7638, lng: -73.9918}},
-            {title: "Upper West Side", location: {lat: 40.7870, lng: -73.9754}}
-            ];
-        return westFilter;
-    });
 }; // End of ViewModel ---------------------------------------------------------
 
 // Error alert if Google Maps API is not available.
